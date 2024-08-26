@@ -3,13 +3,12 @@ const inputElems = sudoku.querySelectorAll('.input')
 const solveBTN = document.getElementById('solve_btn')
 
 solveBTN.addEventListener('click' , solveSudoku)
-let solveCounter = 0
+let solvedSections = 0
 
 let possibleNumbersInSudoku = {}
 let inputElemsIDs = ['up_left_' , 'up_' , 'up_right_' , 'left_' , 'middle_' , 'right_' , 'bottom_left_' , 'bottom_' , 'bottom_right_']
 
 function solveSudoku() {
-    solveCounter++
     Array.from(inputElems).forEach((input , index) => {
         const value = input.value
         if(!value) {
@@ -24,8 +23,12 @@ function solveSudoku() {
 
     reverseCheck()
 
-    if (solveCounter < 2) solveSudoku()
-        
+    let howManySectionsSolved = getSolvedSectionsAmount()
+    if (howManySectionsSolved !== solvedSections) {
+        solvedSections = howManySectionsSolved
+        solveSudoku()
+    }
+    
 }
 
 
@@ -208,4 +211,13 @@ function isSudokuSoleved () {
     })
     if (!bool) return false
     return true
+}
+
+function getSolvedSectionsAmount () {
+    Array.from(inputElems).forEach((input) => {
+        const value = input.value
+        if(value) {
+            solvedSections++
+        }
+    })
 }
