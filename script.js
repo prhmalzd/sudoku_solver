@@ -2,11 +2,22 @@ const sudoku = document.querySelector('.sudoku')
 const inputElems = sudoku.querySelectorAll('.input')
 const solveBTN = document.getElementById('solve_btn')
 
-solveBTN.addEventListener('click' , solveSudoku)
 let solvedSections = 0
 
 let possibleNumbersInSudoku = {}
 let inputElemsIDs = ['up_left_' , 'up_' , 'up_right_' , 'left_' , 'middle_' , 'right_' , 'bottom_left_' , 'bottom_' , 'bottom_right_']
+
+Array.from(inputElems).forEach((input , index) => {
+    input.addEventListener('input' , (event) => {
+        const value = event.target.value
+        if (value.length === 1) {
+            const nextIndex = (index + 1) % inputElems.length;
+            inputElems[nextIndex].focus();
+        }
+    })
+})
+
+solveBTN.addEventListener('click' , solveSudoku)
 
 function solveSudoku() {
     Array.from(inputElems).forEach((input , index) => {
