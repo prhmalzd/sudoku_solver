@@ -2,7 +2,7 @@ const sudoku = document.querySelector('.sudoku')
 const inputElems = sudoku.querySelectorAll('.input')
 const solveBTN = document.getElementById('solve_btn')
 
-let solvedSections = 0
+let unSolvedSections = 0
 
 let possibleNumbersInSudoku = {}
 let inputElemsIDs = ['up_left_' , 'up_' , 'up_right_' , 'left_' , 'middle_' , 'right_' , 'bottom_left_' , 'bottom_' , 'bottom_right_']
@@ -20,10 +20,13 @@ Array.from(inputElems).forEach((input , index) => {
 solveBTN.addEventListener('click' , solveSudoku)
 
 function solveSudoku() {
+    let howManySectionsUnSolved = 0
+
     Array.from(inputElems).forEach((input , index) => {
         const value = input.value
         if(!value) {
             input.style.color = 'blue'
+            howManySectionsUnSolved++
             solve(input , index)
         }
     })
@@ -32,11 +35,13 @@ function solveSudoku() {
     
     if (isSolved) return
 
-    reverseCheck()
-
-    let howManySectionsSolved = getSolvedSectionsAmount()
-    if (howManySectionsSolved !== solvedSections) {
-        solvedSections = howManySectionsSolved
+    
+    if (howManySectionsUnSolved !== unSolvedSections) {
+        unSolvedSections = howManySectionsUnSolved
+        solveSudoku()
+    }
+    else {
+        reverseCheck()
         solveSudoku()
     }
     
@@ -198,8 +203,6 @@ function reverseSolve (id) {
     
 }
 
-
-
 function findMissingNumbersNaive(arr) {
     const missingNumbers = [];
 
@@ -222,13 +225,4 @@ function isSudokuSoleved () {
     })
     if (!bool) return false
     return true
-}
-
-function getSolvedSectionsAmount () {
-    Array.from(inputElems).forEach((input) => {
-        const value = input.value
-        if(value) {
-            solvedSections++
-        }
-    })
 }
